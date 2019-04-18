@@ -4,7 +4,7 @@
       <v-toolbar-title>Café</v-toolbar-title>
       <v-spacer></v-spacer>
       <v-toolbar-items>
-        <v-btn flat>Inicio</v-btn>
+        <v-btn to="/" flat>Inicio</v-btn>
       </v-toolbar-items>
     </v-toolbar>
     <v-content>

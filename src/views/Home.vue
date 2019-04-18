@@ -10,7 +10,7 @@
             </div>
           </v-card-title>
           <v-card-actions>
-            <v-btn flat dark>Empezar</v-btn>
+            <v-btn to="/staffcalculate" flat dark>Empezar</v-btn>
           </v-card-actions>
         </v-card>
       </v-flex>
@@ -23,7 +23,7 @@
             </div>
           </v-card-title>
           <v-card-actions>
-            <v-btn flat dark>Empezar</v-btn>
+            <v-btn to="/pricecalculate" flat dark>Empezar</v-btn>
           </v-card-actions>
         </v-card>
       </v-flex>
