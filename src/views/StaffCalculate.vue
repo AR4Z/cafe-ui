@@ -141,7 +141,7 @@ export default {
     },
     calculate() {
       let quantity = 0;
-      let increaseForSlope = [3.4, 2.25, 0.0];
+      let increaseForSlope = [3.4, 0.0, -2.25];
       this.$validator.validate().then(valid => {
         if (valid) {
           this.lotes.forEach(lote => {
