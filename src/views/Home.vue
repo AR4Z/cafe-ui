@@ -19,7 +19,7 @@
           <v-card-title primary-title>
             <div>
               <h3 class="headline">Calcular el precio del café</h3>
-              <span>Defina el precio correcto que se debe pagar por un kilogramo de café recolectado en determinado lote</span>
+              <span>Defina el precio que se debe pagar por un kilogramo de café recolectado en un lote y el costo de la recolección de café de una semana</span>
             </div>
           </v-card-title>
           <v-card-actions>

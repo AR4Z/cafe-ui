@@ -66,23 +66,21 @@
               >
                 <v-flex xs12 md4>
                   <v-text-field
-                    label="Rendimiento promedio de los recolectores"
-                    v-model="recolectorAverage"
-                    v-validate="'decimal:3|required'"
-                    name="recolectorAverage"
-                    data-vv-as="Rendimiento promedio de los recolectores"
-                    :error-messages="errors.collect('recolectorAverage')"
-                    required
-                  ></v-text-field>
+                      label="% Disminución de horas laborales de acuerdo al clima"
+                      v-model="weatherAverageLoss"
+                      v-validate.initi="'decimal:3|required'"
+                      data-vv-as="% Disminución de horas laborales de acuerdo al clima"
+                      name="weatherAverageLoss"
+                      :error-messages="errors.collect('weatherAverageLoss')"
+                      required
+                    ></v-text-field>
                 </v-flex>
               </v-layout>
-
-              
               <v-layout
                 :column="$vuetify.breakpoint.mdAndDown"
                 :row="!$vuetify.breakpoint.mdAndDown"
               >
-                <v-flex xs12 md4>
+                <v-flex xs12 md12>
                   <v-btn color="success" v-on:click.native="calculate">Calcular</v-btn>
                   <v-btn color="light" v-on:click.native="clean">Limpiar</v-btn>
                 </v-flex>
@@ -109,8 +107,8 @@ export default {
           pendiente: ""
         }
       ],
-      recolectorAverage: "",
       result: "",
+      weatherAverageLoss: "",
       showResult: false
     };
   },
@@ -137,7 +135,7 @@ export default {
           pendiente: ""
         }
       ];
-      this.recolectorAverage = "";
+      this.coffeeAverage = "";
       this.showResult = false;
       this.result = "";
     },
@@ -149,11 +147,10 @@ export default {
           this.lotes.forEach(lote => {
             quantity +=
               Number(lote.coffeeAverage) /
-              (Number(this.recolectorAverage) +
-                increaseForSlope[lote.pendiente]);
+              (13.67 + increaseForSlope[lote.pendiente]);
           });
 
-          this.result = `Necesita ${Math.round(quantity / 40)} personas`;
+          this.result = `Necesita ${Math.round(quantity / (40 * (1 - (this.weatherAverageLoss/100))))} personas`;
           this.showResult = true;
         }
       });
