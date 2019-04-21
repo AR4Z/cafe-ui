@@ -51,7 +51,6 @@
                 </v-flex>
               </v-layout>
             </v-form>
-            
           </v-container>
         </v-card>
       </v-flex>
@@ -71,13 +70,12 @@
                 >
                   <v-flex xs12 md4>
                     <v-text-field
-                      label="Altura promedio de los arboles"
+                      label="Altura promedio de los arboles en metros"
                       v-model="lotes[lotes.indexOf(lote)]['heightTreeAverage']"
-                      v-validate.initi="'decimal:3|required'"
+                      v-validate="{ required: true, regex:/^([0-9]+|[0-9]+,[0-9]{0,2}?)$/ }"
                       data-vv-as="Altura promedio de los arboles"
                       :name="'lote'+lote.num"
                       :error-messages="errors.collect('lote'+lote.num)"
-                      required
                     ></v-text-field>
                   </v-flex>
                   <v-flex xs12 md4>
@@ -130,10 +128,10 @@
               >
                 <v-flex xs12 md4>
                   <v-text-field
-                    label="Precio promedio que las fincas vecinas pagan po un kg recolectado"
+                    label="Precio promedio que las fincas vecinas pagan por un kg recolectado"
                     v-model="priceAverage"
-                    v-validate.initi="'decimal:3|required'"
-                    data-vv-as="Precio promedio que las fincas vecinas pagan po un kg recolectado"
+                    v-validate.initi="'numeric|required'"
+                    data-vv-as="Precio promedio que las fincas vecinas pagan por un kg recolectado"
                     name="priceAverage"
                     :error-messages="errors.collect('priceAverage')"
                     required
@@ -144,11 +142,24 @@
                 :column="$vuetify.breakpoint.mdAndDown"
                 :row="!$vuetify.breakpoint.mdAndDown"
               >
+                <v-flex xs12 md4>
+                  <v-text-field
+                    label="Piso"
+                    v-model="piso"
+                    v-validate.initi="'numeric|required'"
+                    data-vv-as="Piso"
+                    name="piso"
+                    :error-messages="errors.collect('piso')"
+                    required
+                  ></v-text-field>
+                </v-flex>
+              </v-layout>
+              <v-layout
+                :column="$vuetify.breakpoint.mdAndDown"
+                :row="!$vuetify.breakpoint.mdAndDown"
+              >
                 <v-flex xs12 md12>
-                  <v-btn
-                    color="success"
-                    v-on:click.native="calculatePricePerKg"
-                  >Calcular</v-btn>
+                  <v-btn color="success" v-on:click.native="calculatePricePerKg">Calcular</v-btn>
                   <v-btn color="light" v-on:click.native="clean">Limpiar</v-btn>
                 </v-flex>
               </v-layout>
@@ -174,6 +185,7 @@ export default {
           priceKg: ""
         }
       ],
+      piso: "",
       priceAverage: "",
       showResult: false,
       result: "",
@@ -213,6 +225,7 @@ export default {
       this.priceAverage = "";
       this.showResult = false;
       this.result = "";
+      this.piso = "";
       this.priceWeek = 0;
       this.showPriceWeek = false;
     },
@@ -229,13 +242,15 @@ export default {
       this.$validator.validate().then(valid => {
         if (valid) {
           this.lotes.forEach(lote => {
-            let price = 500;
-            if (Number(lote.heightTreeAverage) > 1.7) {
-              price += 50;
+            let price = Number(this.priceAverage);
+            if (Number(lote.heightTreeAverage.replace(',', '.')) >= 1.7) {
+              price += Number(this.priceAverage) * 0.1;
             }
 
             price +=
-              450 + 450 * (increaseForCoffeeAmount[lote.coffeeAmount]() / 100);
+              Number(this.piso) *
+              (increaseForCoffeeAmount[lote.coffeeAmount]() / 100);
+
             if (lote.distanceGreaterToThousand) {
               price += 100;
             }
@@ -250,7 +265,8 @@ export default {
       this.$validator.validate().then(valid => {
         if (valid) {
           this.lotes.forEach(lote => {
-            this.priceWeek += Number(lote.priceKg) * Number(lote.coffeeAmountKgs);
+            this.priceWeek +=
+              Number(lote.priceKg) * Number(lote.coffeeAmountKgs);
           });
           this.showPriceWeek = true;
         }

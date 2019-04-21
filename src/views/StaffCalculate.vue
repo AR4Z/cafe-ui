@@ -68,7 +68,7 @@
                   <v-text-field
                       label="% Disminución de horas laborales de acuerdo al clima"
                       v-model="weatherAverageLoss"
-                      v-validate.initi="'decimal:3|required'"
+                      v-validate.initi="'numeric|required'"
                       data-vv-as="% Disminución de horas laborales de acuerdo al clima"
                       name="weatherAverageLoss"
                       :error-messages="errors.collect('weatherAverageLoss')"
