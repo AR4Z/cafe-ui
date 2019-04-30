@@ -36,7 +36,7 @@
             </div>
           </v-card-title>
           <v-card-actions>
-            <v-btn flat dark>Empezar</v-btn>
+            <v-btn to="/assignment" flat dark>Empezar</v-btn>
           </v-card-actions>
         </v-card>
       </v-flex>

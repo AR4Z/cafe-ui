@@ -19,8 +19,16 @@
                   </v-flex>
                   <v-flex xs12 md12>
                     <v-text-field
-                      label="Precio del kilogramo de café recolectado"
-                      v-model="lotes[lotes.indexOf(lote)]['priceKg']"
+                      label="Precio mínimo por kg"
+                      v-model="lotes[lotes.indexOf(lote)]['minPriceKg']"
+                      disabled
+                      readonly
+                    ></v-text-field>
+                  </v-flex>
+                  <v-flex xs12 md12>
+                    <v-text-field
+                      label="Precio máximo por kg"
+                      v-model="lotes[lotes.indexOf(lote)]['maxPriceKg']"
                       disabled
                       readonly
                     ></v-text-field>
@@ -47,7 +55,9 @@
                   <v-btn color="light" v-on:click.native="clean">Limpiar</v-btn>
                 </v-flex>
                 <v-flex xs12 md12 v-if="showPriceWeek">
-                  <span>El precio semanal es ${{ priceWeek }}</span>
+                  <span>El precio mínimo semanal es {{ Number(minPriceWeek) | currency}}</span>
+                  <br/>
+                  <span>El precio máximo semanal es {{ Number(maxPriceWeek) | currency}}</span>
                 </v-flex>
               </v-layout>
             </v-form>
@@ -182,14 +192,16 @@ export default {
           coffeeAmount: "",
           coffeeAmountKgs: "",
           distanceGreaterToThousand: false,
-          priceKg: ""
+          minPriceKg: "",
+          maxPriceKg: ""
         }
       ],
       piso: "",
       priceAverage: "",
       showResult: false,
       result: "",
-      priceWeek: 0,
+      minPriceWeek: 0,
+      maxPriceWeek: 0,
       showPriceWeek: false
     };
   },
@@ -203,7 +215,8 @@ export default {
         coffeeAmount: "",
         coffeeAmountKgs: "",
         distanceGreaterToThousand: false,
-        priceKg: ""
+        minPriceKg: "",
+        maxPriceKg: ""
       });
     },
     removeLote(num) {
@@ -219,7 +232,8 @@ export default {
           coffeeAmount: "",
           coffeeAmountKgs: "",
           distanceGreaterToThousand: false,
-          priceKg: ""
+          minPriceKg: "",
+          maxPriceKg: ""
         }
       ];
       this.priceAverage = "";
@@ -233,40 +247,46 @@ export default {
       return Math.floor(min + Math.random() * (max + 1 - min));
     },
     calculatePricePerKg() {
-      let increaseForCoffeeAmount = [
-        () => this.generateRandomInteger(60, 120),
-        () => this.generateRandomInteger(40, 50),
-        () => this.generateRandomInteger(10, 20),
-        () => 0
-      ];
+      let increaseForCoffeeAmount = [[60, 120], [40, 50], [10, 20], [0, 0]];
       this.$validator.validate().then(valid => {
         if (valid) {
           this.lotes.forEach(lote => {
-            let price = Number(this.priceAverage);
-            if (Number(lote.heightTreeAverage.replace(',', '.')) >= 1.7) {
-              price += Number(this.priceAverage) * 0.1;
+            let minPrice = Number(this.priceAverage);
+            let maxPrice = Number(this.priceAverage);
+            if (Number(lote.heightTreeAverage.replace(",", ".")) >= 1.7) {
+              minPrice += Number(this.priceAverage) * 0.1;
+              maxPrice += Number(this.priceAverage) * 0.1;
             }
 
-            price +=
+            minPrice +=
               Number(this.piso) *
-              (increaseForCoffeeAmount[lote.coffeeAmount]() / 100);
+              (increaseForCoffeeAmount[lote.coffeeAmount][0] / 100);
+
+            maxPrice +=
+              Number(this.piso) *
+              (increaseForCoffeeAmount[lote.coffeeAmount][1] / 100);
 
             if (lote.distanceGreaterToThousand) {
-              price += 100;
+              minPrice += 100;
+              maxPrice += 100;
             }
-            lote.priceKg = price;
+            lote.minPriceKg = minPrice;
+            lote.maxPriceKg = maxPrice;
           });
           this.showResult = true;
         }
       });
     },
     calculatePricePerWeek() {
-      this.priceWeek = 0;
+      this.minPriceWeek = 0;
+      this.maxPriceWeek = 0;
       this.$validator.validate().then(valid => {
         if (valid) {
           this.lotes.forEach(lote => {
-            this.priceWeek +=
-              Number(lote.priceKg) * Number(lote.coffeeAmountKgs);
+            this.minPriceWeek +=
+              Number(lote.minPriceKg) * Number(lote.coffeeAmountKgs);
+            this.maxPriceWeek +=
+              Number(lote.maxPriceKg) * Number(lote.coffeeAmountKgs);
           });
           this.showPriceWeek = true;
         }

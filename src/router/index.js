@@ -17,6 +17,10 @@ export default new Router({
         {
             path: "/pricecalculate",
             component: () => import("@/views/PriceCalculate")
+        },
+        {
+            path: "/assignment",
+            component: () => import("@/views/StaffAssignment")
         }
     ]
 });
