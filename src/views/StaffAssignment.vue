@@ -1,7 +1,19 @@
 <template>
   <v-container grid-list-md text-xs-center>
     <v-layout row wrap>
-      <v-flex xs12>
+      <v-flex xs12 v-if="showResult">
+        <v-card-title>
+            <span class="title">Asignación de recolectores para cosechado de café</span>
+          </v-card-title>
+          <v-container>
+            <show-assignment v-bind:recolectores="result" />
+          </v-container>
+      </v-flex>
+      <v-flex v-if="waiting">
+        <v-progress-circular :size="70" :width="7" color="purple"  indeterminate></v-progress-circular>
+        <h1>Esto puede tomar unos minutos</h1>
+      </v-flex>
+      <v-flex xs12  v-if="!(showResult || waiting)">
         <v-card color="white">
           <v-card-title>
             <span class="title">Encuentre la asignación óptima de personal</span>
@@ -9,7 +21,7 @@
           <v-form>
             <v-container>
               <h2>Información de lotes</h2>
-              <div v-for="lote in lotes" :key="lote.id">
+              <div v-for="lote in lotes" :key="'lote'+lote.id">
                 <v-layout
                   :column="$vuetify.breakpoint.mdAndDown"
                   :row="!$vuetify.breakpoint.mdAndDown"
@@ -54,7 +66,7 @@
               </div>
               <v-divider></v-divider>
               <h2>Información de recolectores</h2>
-              <div v-for="recolector in recolectores" :key="recolector.id">
+              <div v-for="recolector in recolectores" :key="'recolector'+recolector.id">
                 <v-layout row wrap>
                   <v-flex xs12 md3>
                     <v-text-field
@@ -69,10 +81,10 @@
                   </v-flex>
                   <v-flex xs12 md4>
                     <v-text-field
-                      label="Rendimiento"
+                      label="Rendimiento kg/h"
                       v-model="recolector.rendimiento"
                       v-validate="{ required: true, regex:/^([0-9]+|[0-9]+,[0-9]{0,2}?)$/ }"
-                      data-vv-as="Rendimiento"
+                      data-vv-as="Rendimiento kg/h"
                       :name="`rendimiento${recolector.id}`"
                       :error-messages="errors.collect(`rendimiento${recolector.id}`)"
                     ></v-text-field>
@@ -96,9 +108,7 @@
               </div>
             </v-container>
             <v-flex xs12>
-              <v-btn color="success" v-on:click.native="calcular">
-                Calcular
-              </v-btn>
+              <v-btn color="success" v-on:click.native="calcular">Calcular</v-btn>
             </v-flex>
           </v-form>
         </v-card>
@@ -107,8 +117,13 @@
   </v-container>
 </template>
 <script>
+import ShowAssignment from "../components/ShowAssignment.vue";
+
 export default {
   name: "StaffAssignment",
+  components: {
+    ShowAssignment
+  },
   data() {
     return {
       recolectores: [
@@ -125,7 +140,12 @@ export default {
           kg: "",
           pendiente: ""
         }
-      ]
+      ],
+      result: [],
+      showResult: false,
+      token: "",
+      refreshId: "",
+      waiting: false
     };
   },
   methods: {
@@ -151,11 +171,61 @@ export default {
       this.lotes = this.lotes.filter(item => item.id !== id);
     },
     calcular() {
-        this.$validator.validate().then(valid => {
-            if (valid) {
-                return 
+      this.$validator.validate().then(valid => {
+        if (valid) {
+          const rendimientos = [];
+          const pendientes = [];
+          const kgs = [];
+
+          for (
+            let n_recolector = 0;
+            n_recolector < this.recolectores.length;
+            n_recolector++
+          ) {
+            const recolector = this.recolectores[n_recolector];
+
+            for (let i = 0; i < recolector.num; i++) {
+              rendimientos.push(
+                Number(recolector.rendimiento.replace(",", "."))
+              );
             }
-        })
+          }
+
+          for (let n_lote = 0; n_lote < this.lotes.length; n_lote++) {
+            const lote = this.lotes[n_lote];
+            pendientes.push(lote.pendiente);
+            kgs.push(lote.kg);
+          }
+          this.axios
+            .post("http://gaia.manizales.unal.edu.co:3200/v1/schedule", {
+              rendimientos: rendimientos,
+              pendientes: pendientes,
+              kgs: kgs
+            })
+            .then(res => {
+              this.token = res.data.id_scheduler;
+              this.waiting = true;
+              this.refreshId = setInterval(() => {
+                this.checkScheduleStatus();
+              }, 1000);
+            })
+            .catch(err => {
+              console.error(err);
+            });
+        }
+      });
+    },
+    checkScheduleStatus() {
+      this.axios
+        .get(`http://gaia.manizales.unal.edu.co:3200/v1/schedule/${this.token}`)
+        .then(res => {
+          if (res.data.status == "SUCCESS") {
+            clearInterval(this.refreshId);
+            this.result = res.data.schedule;
+            this.showResult = true;
+            this.waiting = false;
+          }
+        });
     }
   }
 };

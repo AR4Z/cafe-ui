@@ -1,5 +1,7 @@
 import Vue from 'vue'
 import App from './App.vue'
+import axios from 'axios'
+import VueAxios from 'vue-axios'
 import router from './router'
 import Vuetify from 'vuetify'
 import 'vuetify/dist/vuetify.min.css'
@@ -20,7 +22,7 @@ Vue.use(VueCurrencyFilter, {
   symbolPosition: 'front',
   symbolSpacing: true
 })
-
+Vue.use(VueAxios, axios)
 Validator.localize('es', es)
 new Vue({
   router,

@@ -10,11 +10,13 @@
     "start": "serve -s dist/"
   },
   "dependencies": {
+    "axios": "^0.18.0",
     "core-js": "^2.6.5",
     "material-design-icons-iconfont": "^4.0.5",
     "serve": "^11.0.0",
     "vee-validate": "^2.2.3",
     "vue": "^2.6.10",
+    "vue-axios": "^2.1.4",
     "vue-currency-filter": "^3.4.2",
     "vue-router": "^3.0.6",
     "vuetify": "^1.5.12"
