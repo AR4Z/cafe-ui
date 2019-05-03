@@ -4,7 +4,7 @@
       <v-flex xs12>
         <v-card color="white">
           <v-card-title>
-            <span class="title">Calcule el precio de una semana de recolección</span>
+            <span class="title">Calcule el costo de una semana de recolección</span>
           </v-card-title>
           <v-container fill-height>
             <v-form>
@@ -55,9 +55,9 @@
                   <v-btn color="light" v-on:click.native="clean">Limpiar</v-btn>
                 </v-flex>
                 <v-flex xs12 md12 v-if="showPriceWeek">
-                  <span>El precio mínimo semanal es {{ Number(minPriceWeek) | currency}}</span>
+                  <span>El costo mínimo semanal es {{ Number(minPriceWeek) | currency}}</span>
                   <br/>
-                  <span>El precio máximo semanal es {{ Number(maxPriceWeek) | currency}}</span>
+                  <span>El costo máximo semanal es {{ Number(maxPriceWeek) | currency}}</span>
                 </v-flex>
               </v-layout>
             </v-form>
