@@ -210,6 +210,7 @@ export default {
       this.lotes = this.lotes.filter(item => item.id !== id);
     },
     calcular() {
+      this.showError = false
       this.$validator.validate().then(valid => {
         if (valid) {
           const rendimientos = [];
