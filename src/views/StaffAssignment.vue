@@ -3,7 +3,7 @@
     <v-layout row wrap>
       <v-flex xs12 v-if="showResult">
         <v-card-title>
-          <span class="title">Asignación de recolectores para cosechado de café</span>
+          <span class="title">Asignación de recolectores a lotes de café</span>
         </v-card-title>
         <v-container>
           <show-assignment v-bind:recolectores="result"/>
