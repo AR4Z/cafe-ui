@@ -248,7 +248,7 @@ export default {
     },
     checkScheduleStatus() {
       this.axios
-        .get(`http://gaia.manizales.unal.edu.co:3200/v1/schedule/v1/schedule/${this.token}`)
+        .get(`http://gaia.manizales.unal.edu.co:3200/v1/schedule/${this.token}`)
         .then(res => {
           if (res.data.status == "SUCCESS") {
             clearInterval(this.refreshId);
