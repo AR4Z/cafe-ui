@@ -9,6 +9,12 @@
           <show-assignment v-bind:recolectores="result"/>
         </v-container>
       </v-flex>
+
+      <v-flex xs12 v-if="showError">
+        <v-container>
+          <v-alert :value="true" color="error" icon="warning" outline>{{ message }}</v-alert>
+        </v-container>
+      </v-flex>
       <v-flex v-if="waiting">
         <v-progress-circular :size="70" :width="7" color="purple" indeterminate></v-progress-circular>
         <h1>Esto puede tomar unos minutos</h1>
@@ -172,6 +178,8 @@ export default {
         }
       ],
       result: [],
+      message: "",
+      showError: false,
       showResult: false,
       token: "",
       refreshId: "",
@@ -252,8 +260,13 @@ export default {
         .then(res => {
           if (res.data.status == "SUCCESS") {
             clearInterval(this.refreshId);
-            this.result = res.data.schedule;
-            this.showResult = true;
+            if (res.data.schedule) {
+              this.result = res.data.schedule;
+              this.showResult = true;
+            } else {
+              this.message = res.data.message;
+              this.showError = true;
+            }
             this.waiting = false;
           }
         });
