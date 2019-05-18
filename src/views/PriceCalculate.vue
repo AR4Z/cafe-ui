@@ -136,7 +136,7 @@
                 :column="$vuetify.breakpoint.mdAndDown"
                 :row="!$vuetify.breakpoint.mdAndDown"
               >
-                <v-flex xs12 md4>
+                <v-flex xs12 md6>
                   <v-text-field
                     label="Precio promedio que las fincas vecinas pagan por un kg de café recolectado"
                     v-model="priceAverage"
