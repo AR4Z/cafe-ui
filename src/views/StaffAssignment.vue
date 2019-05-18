@@ -95,7 +95,7 @@
                         <v-flex xs12 md3>
                           <v-text-field
                             v-validate="'numeric|required'"
-                            label="Numero de recolectores"
+                            label="Número de recolectores"
                             :name="`recolectores${recolector.id}`"
                             :error-messages="errors.collect(`recolectores${recolector.id}`)"
                             v-model="recolector.num"
@@ -143,7 +143,7 @@
                   </v-container>
                 </v-form>
               </v-card>
-              <v-btn color="primary" @click="e1 = 1">Atras</v-btn>
+              <v-btn color="primary" @click="e1 = 1">Atrás</v-btn>
               <v-btn color="success" v-on:click.native="calcular">Calcular</v-btn>
             </v-stepper-content>
           </v-stepper-items>

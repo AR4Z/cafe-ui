@@ -5,8 +5,8 @@
         <v-card color="blue-grey darken-2" class="white--text">
           <v-card-title primary-title>
             <div>
-              <h3 class="headline">Calcular personal</h3>
-              <span>Defina la cantidad de personal necesario para realizar la recolección del café maduro en una finca</span>
+              <h3 class="headline">Calcular la cantidad de personal necesario</h3>
+              <span>Defina la cantidad de personal necesario para realizar la recolección del café maduro promedio en una finca</span>
             </div>
           </v-card-title>
           <v-card-actions>
