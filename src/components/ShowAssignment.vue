@@ -3,7 +3,7 @@
     <template v-slot:items="props">
       <td>{{ props.item.name }}</td>
       <td class="text-xs-center" v-for="lote in props.item.lotes" :key="lote.name">
-          {{ lote.hours }} horas ({{ lote.cafe }} Kgs)
+          {{ lote.hours }} horas
       </td>
     </template>
   </v-data-table>
