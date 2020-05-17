@@ -235,7 +235,7 @@ export default {
             kgs.push(lote.kg);
           }
           this.axios
-            .post("http://localhost:8000/v1/schedule", {
+            .post("http://gaia.manizales.unal.edu.co:3200/ga-cafe/v1/schedule", {
               rendimientos: rendimientos,
               pendientes: pendientes,
               kgs: kgs
@@ -257,7 +257,7 @@ export default {
     },
     checkScheduleStatus() {
       this.axios
-        .get(`http://localhost:8000/v1/schedule/${this.token}`)
+        .get(`http://gaia.manizales.unal.edu.co:3200/ga-cafe/v1/schedule/${this.token}`)
         .then(res => {
           if (res.data.status == "SUCCESS") {
             clearInterval(this.refreshId);
